@@ -1,0 +1,59 @@
+import random
+
+class KelimeOyunu:
+    def __init__(self, kelime_listesi):
+        self.kelime_listesi = kelime_listesi
+        self.hedef_kelime = ""
+        self.oyuncu_puani = 0
+        self.oyuncu_kelimeleri = set()
+
+    def yeni_oyun(self):
+        self.hedef_kelime = random.choice(self.kelime_listesi).lower()
+        self.oyuncu_puani = 0
+        self.oyuncu_kelimeleri.clear()
+        print(f"Yeni oyun! Hedef kelime: {self.hedef_kelime.capitalize()}")
+        self.oyunu_oyna()
+
+    def kelimeyi_kontrol_et(self, kelime):
+        kelime = kelime.lower()
+        if kelime in self.oyuncu_kelimeleri:
+            print("Bu kelimeyi zaten kullandınız. Başka bir kelime deneyin.")
+            return False
+        elif kelime not in self.kelime_listesi:
+            print("Geçersiz kelime. Başka bir kelime deneyin.")
+            return False
+        elif any(harf not in self.hedef_kelime for harf in kelime):
+            print("Kullandığınız harfler hedef kelimenin harflerinde bulunmalıdır.")
+            return False
+        else:
+            return True
+
+    def puan_hesapla(self, kelime):
+        uzunluk = len(kelime)
+        bonus_puan = 0
+
+        if uzunluk >= 5:
+            bonus_puan += 5
+        if uzunluk == len(self.hedef_kelime):
+            bonus_puan += 10
+
+        return uzunluk + bonus_puan
+
+    def oyunu_oyna(self):
+        while True:
+            oyuncu_kelime = input("Yeni bir kelime girin (Çıkış için 'q'): ")
+
+            if oyuncu_kelime.lower() == 'q':
+                print(f"Oyun sona erdi. Toplam puanınız: {self.oyuncu_puani}")
+                break
+
+            if self.kelimeyi_kontrol_et(oyuncu_kelime):
+                self.oyuncu_kelimeleri.add(oyuncu_kelime)
+                kelime_puani = self.puan_hesapla(oyuncu_kelime)
+                self.oyuncu_puani += kelime_puani
+                print(f"Doğru! Puanınız: {kelime_puani}, Toplam Puanınız: {self.oyuncu_puani}")
+
+if __name__ == "__main__":
+    kelime_listesi = ["python", "programlama", "oyun", "kelime", "geliştirme", "proje", "kodlama"]
+    oyun = KelimeOyunu(kelime_listesi)
+    oyun.yeni_oyun()
