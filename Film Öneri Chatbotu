@@ -1,0 +1,66 @@
+import random
+
+class FilmTavsiyeChatbot:
+    def __init__(self):
+        self.film_veritabani = {
+            "Aksiyon": ["Matrix", "Inception", "Die Hard"],
+            "Komedi": ["Superbad", "Anchorman", "Dumb and Dumber"],
+            "Drama": ["The Shawshank Redemption", "Forrest Gump", "The Godfather"]
+            # daha fazla tür ve film ekleyebilirsiniz.
+        }
+        self.kullanici_tercihleri = {}
+
+    def tavsiye_et(self, film_turu):
+        film_turu = film_turu.capitalize()
+        if film_turu in self.film_veritabani:
+            film_listesi = self.film_veritabani[film_turu]
+            secilen_film = random.choice(film_listesi)
+            self.kullanici_tercihleri[secilen_film] = film_turu
+            return secilen_film
+        else:
+            return "Bu film türünde öneri bulunamadı."
+
+    def film_detaylari(self, film_adi):
+        # İleri bir versiyonda API entegrasyonu ile film detaylarına ve fragman bağlantılarına erişim eklenebilir.
+        return f"{film_adi} hakkında detaylı bilgi bulunamadı."
+
+    def kullanici_gecmisi(self):
+        if self.kullanici_tercihleri:
+            print("Kullanıcı Tercihleri:")
+            for film, tur in self.kullanici_tercihleri.items():
+                print(f"{film}: {tur}")
+        else:
+            print("Henüz bir film tercihiniz bulunmuyor.")
+
+    def sohbet(self):
+        print("Merhaba! Size nasıl yardımcı olabilirim?")
+        while True:
+            secenekler = """
+            1. Film Tavsiyesi
+            2. Kullanıcı Geçmişi
+            3. Çıkış
+            """
+            print(secenekler)
+            secim = input("Lütfen bir seçenek girin (1-3): ")
+            
+            if secim == '1':
+                film_turu = input("Hangi film türünde bir öneri istersiniz? (Çıkış için 'q'): ")
+                if film_turu.lower() == 'q':
+                    print("Güle güle!")
+                    break
+                film_oneri = self.tavsiye_et(film_turu)
+                print(f"Sana tavsiye ettiğim film: {film_oneri}")
+                detay_secimi = input("Film detaylarına bakmak ister misiniz? (Evet için 'e' / Hayır için 'h'): ")
+                if detay_secimi.lower() == 'e':
+                    print(self.film_detaylari(film_oneri))
+            elif secim == '2':
+                self.kullanici_gecmisi()
+            elif secim == '3':
+                print("Güle güle!")
+                break
+            else:
+                print("Geçersiz seçenek. Lütfen tekrar deneyin.")
+
+if __name__ == "__main__":
+    chatbot = FilmTavsiyeChatbot()
+    chatbot.sohbet()
