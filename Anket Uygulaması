@@ -1,0 +1,82 @@
+import json
+
+class AnketUygulamasi:
+    def __init__(self):
+        self.anketler = []
+
+    def anket_olustur(self, sorular):
+        yeni_anket = {"sorular": sorular, "cevaplar": []}
+        self.anketler.append(yeni_anket)
+        print("Anket oluşturuldu.")
+
+    def anketlere_katil(self):
+        if not self.anketler:
+            print("Henüz hiç anket bulunmuyor.")
+            return
+
+        print("Hangi ankete katılmak istersiniz?")
+
+        for i, anket in enumerate(self.anketler):
+            print(f"{i + 1}. Anket")
+            for soru in anket["sorular"]:
+                print(f" - {soru}")
+
+        anket_secimi = int(input("Katılmak istediğiniz anketin numarasını girin: ")) - 1
+
+        if 0 <= anket_secimi < len(self.anketler):
+            cevaplar = []
+            for soru in self.anketler[anket_secimi]["sorular"]:
+                cevap = input(f"{soru} için cevabınız: ")
+                cevaplar.append(cevap)
+            self.anketler[anket_secimi]["cevaplar"].append(cevaplar)
+            print("Ankete başarıyla katıldınız.")
+        else:
+            print("Geçersiz anket numarası.")
+
+    def sonuclari_goruntule(self):
+        if not self.anketler:
+            print("Henüz hiç anket bulunmuyor.")
+            return
+
+        print("Hangi anketin sonuçlarını görmek istersiniz?")
+
+        for i, anket in enumerate(self.anketler):
+            print(f"{i + 1}. Anket")
+            for j, cevaplar in enumerate(anket["cevaplar"]):
+                print(f" - Katılımcı {j + 1}: {', '.join(cevaplar)}")
+
+        anket_secimi = int(input("Sonuçlarını görmek istediğiniz anketin numarasını girin: ")) - 1
+
+        if 0 <= anket_secimi < len(self.anketler):
+            for j, cevaplar in enumerate(self.anketler[anket_secimi]["cevaplar"]):
+                print(f"Katılımcı {j + 1}: {', '.join(cevaplar)}")
+        else:
+            print("Geçersiz anket numarası.")
+
+    def uygulamayi_calistir(self):
+        while True:
+            print("""
+            1. Anket Oluştur
+            2. Anketlere Katıl
+            3. Sonuçları Görüntüle
+            4. Çıkış
+            """)
+            secim = input("Lütfen bir seçenek girin (1-4): ")
+
+            if secim == '1':
+                soru_sayisi = int(input("Anketinizde kaç soru olacak? "))
+                sorular = [input(f"Soru {i + 1}: ") for i in range(soru_sayisi)]
+                self.anket_olustur(sorular)
+            elif secim == '2':
+                self.anketlere_katil()
+            elif secim == '3':
+                self.sonuclari_goruntule()
+            elif secim == '4':
+                print("Güle güle!")
+                break
+            else:
+                print("Geçersiz seçenek. Lütfen tekrar deneyin.")
+
+if __name__ == "__main__":
+    uygulama = AnketUygulamasi()
+    uygulama.uygulamayi_calistir()
